@@ -1,56 +1,145 @@
 Attribute VB_Name = "Support"
-Sub create()
-Dim Folder As String
-Dim Path As String
-Dim Slash As String
-Dim object As Object
+Sub weightloss()
 Dim ThisWorkbook As Workbook
-
 Set ThisWorkbook = ActiveWorkbook
-Set object = CreateObject("Scripting.FileSystemObject")
-
-ThisWorkbook.Sheets("Preferences").Activate
-Folder = ActiveSheet.Range("L9").Text
-Path = ActiveWorkbook.Path
-
-    If object.FolderExists(Path & "\" & Folder) Then
-        object.DeleteFolder (Path & "\" & Folder)
-        object.CreateFolder (Path & "\" & Folder)
-    Else
-        object.CreateFolder (Path & "\" & Folder)
-    End If
-
+For i = 1 To 25
+ThisWorkbook.Sheets(i).Activate
+Range("A3000:BB30000").Select
+Range(Selection, Selection.End(xlToRight)).Select
+With Selection
+    .Delete
+End With
+Next i
 End Sub
-Sub ОбновитьСводныеТаблицы()
-
-Dim ws As Worksheet
-Dim pt As PivotTable
+Sub refresh()
 Dim ThisWorkbook As Workbook
 Set ThisWorkbook = ActiveWorkbook
-
-'ThisWorkbook.Activate
-'For Each ws In ThisWorkbook.Worksheets
-'ws.Unprotect PASSWORD:="gfhjkm"
-'Next ws
-
+ThisWorkbook.Activate
 For Each ws In ThisWorkbook.Worksheets
 For Each pt In ws.PivotTables
 pt.RefreshTable
 Next pt
 Next ws
+ThisWorkbook.Activate
+For Each ws In ThisWorkbook.Worksheets
+For Each pt In ws.PivotTables
+pt.RefreshTable
+Next pt
+Next ws
+End Sub
+Sub lastone()
+Dim ThisWorkbook, importWB As Workbook
+Set ThisWorkbook = ActiveWorkbook
 
-'For Each ws In ThisWorkbook.Worksheets
-'ws.Protect PASSWORD:="gfhjkm"
-'Next ws
+Application.ScreenUpdating = False
+Application.ScreenUpdating = False
+Application.EnableEvents = False
+ActiveSheet.DisplayPageBreaks = False
+Application.DisplayStatusBar = False
+Application.DisplayAlerts = False
+ 
+ FilesToOpen = Application.GetOpenFilename _
+ (FileFilter:="Microsoft Excel Files (*.xlsx), *.xlsx", _
+ MultiSelect:=True, Title:="Файл для вставки")
+ 
+ If TypeName(FilesToOpen) = "Boolean" Then
+ MsgBox "Файл не выбран!"
+ GoTo ExitHandler
+ End If
+ 
+ Set importWB = Workbooks.Open(Filename:=FilesToOpen(1))
+ importWB.Sheets(1).Activate
+ 
+ lLastRow = Cells(Rows.Count, "K").End(xlUp).Row
+ ThisWorkbook.Sheets("Ranges").Activate
+ Range("B15").Value = lLastRow
+
+ExitHandler:
+    Application.ScreenUpdating = True
+    Application.EnableEvents = True
+    ActiveSheet.DisplayPageBreaks = True
+    Application.DisplayStatusBar = True
+    Application.DisplayAlerts = True
+ ThisWorkbook.Sheets("Preferences").Activate
+ Exit Sub
+End Sub
+Sub инн()
+
+ Dim FilesToOpen
+ Dim ThisWorkbook As Workbook
+ Dim importWB  As Workbook
+ Dim this As Worksheet
+ Set ThisWorkbook = ActiveWorkbook
+ 
+ On Error GoTo ErrHandler
+ 
+ Application.ScreenUpdating = False
+ Application.DisplayAlerts = False
+ 
+ FilesToOpen = Application.GetOpenFilename _
+ (FileFilter:="Microsoft Excel Files (*.xlsx), *.xlsx", _
+ MultiSelect:=True, Title:="Файл для вставки")
+ 
+ If TypeName(FilesToOpen) = "Boolean" Then
+ MsgBox "Файл не выбран!"
+ GoTo ExitHandler
+ End If
+ 
+ СнятьЗащитуВсехЛистов
+ Set importWB = Workbooks.Open(Filename:=FilesToOpen(1))
+
+ThisWorkbook.Sheets("ИНН").Activate
+ Range("A1:BB400000").Select
+ With Selection
+        .Clear
+ End With
+
+ importWB.Sheets(1).Activate
+ Range("A1:С400000").Select
+ Range("A1:С400000").Copy
+ ThisWorkbook.Sheets("ИНН").Activate
+ Range("A1:С400000").Select
+ With Selection
+        .PasteSpecial Paste:=xlPasteAll
+        .UnMerge
+        .Font.Name = "Times New Roman"
+        .WrapText = False
+        .MergeCells = False
+ End With
+
+importWB.Close
+
+ ThisWorkbook.Sheets("ИНН").Activate
+ Range("A1:A400000").Copy
+ ThisWorkbook.Sheets("ИНН").Activate
+ Range("C1:C400000").Select
+ With Selection
+        .PasteSpecial Paste:=xlPasteAll
+        .UnMerge
+        .Font.Name = "Times New Roman"
+        .WrapText = False
+        .MergeCells = False
+ End With
+
+Set this = ThisWorkbook.Sheets("Preferences")
+ 
+ this.Activate
+ Range("L2").Select
+ ЗаблокироватьВсеЛисты
+ 
+' MsgBox "Справочник ГИД (ИНН) успешно загружен"
+
+ExitHandler:
+ Application.ScreenUpdating = True
+ ThisWorkbook.Sheets("Preferences").Activate
+ ЗаблокироватьВсеЛисты
+ Exit Sub
+ 
+ErrHandler:
+ MsgBox Err.Description
+ Resume ExitHandler
 
 End Sub
-
-Public Sub ClearClipboard()
-    With GetObject("New:{1C3B4210-F441-11CE-B9EA-00AA006B1A69}")
-    .SetText Empty: .PutInClipboard
-    End With
-End Sub
-
 Sub ЗаблокироватьВсеЛисты()
 Dim ws As Worksheet
 For Each ws In ActiveWorkbook.Worksheets
@@ -69,114 +158,3 @@ Next ws
 ActiveWorkbook.Unprotect Password:="gfhjkm"
 ThisWorkbook.Sheets("Preferences").Activate
 End Sub
-
-Sub Исправить()
- Dim ThisWorkbook As Workbook
- Dim ws As Worksheet
- Dim pt As PivotTable
- Dim MyRange As Range
- Dim MyCell As Range
- Dim this As Worksheet
- 
- Set ThisWorkbook = ActiveWorkbook
- On Error GoTo ErrHandler
- Application.ScreenUpdating = False
- Application.DisplayAlerts = False
- 
- Set this = ThisWorkbook.Sheets("Preferences")
-
- this.Activate
- ActiveSheet.Unprotect Password:="gfhjkm"
-
- this.Activate
- Range("AS1").Copy
- this.Activate
- Range("AS2").Select
- Selection.PasteSpecial Paste:=xlPasteValues
-
- 
-ExitHandler:
- Application.ScreenUpdating = True
- ThisWorkbook.Sheets("Preferences").Activate
- Exit Sub
- 
-ErrHandler:
- MsgBox Err.Description
- Resume ExitHandler
- 
-End Sub
-
-Sub delete()
- Dim ws As Worksheet
- Dim pt As PivotTable
- Dim ThisWorkbook As Workbook
- Dim rCell As Range
- On Error GoTo ErrHandler
- Set ThisWorkbook = ActiveWorkbook
- 
- Application.ScreenUpdating = False
- 
- СнятьЗащитуВсехЛистов
-  
- ThisWorkbook.Sheets("Data90").Activate
- Range("A1:BB300").Select
- With Selection
-        .Clear
- End With
- 
- ThisWorkbook.Sheets("Data90-1").Activate
- Range("A1:BB300").Select
- With Selection
-        .Clear
- End With
- 
- ThisWorkbook.Sheets("Data90-2").Activate
- Range("A1:BB300").Select
- With Selection
-        .Clear
- End With
- 
- ThisWorkbook.Sheets("Preferences").Activate
- Range("AS2").Select
- With Selection
-        .Clear
- End With
- 
- ThisWorkbook.Sheets("ИНН").Activate
- Range("A1:BB400000").Select
- With Selection
-        .Clear
- End With
-
-
-For Each ws In ThisWorkbook.Worksheets
-For Each pt In ws.PivotTables
-pt.RefreshTable
-Next pt
-Next ws
-
-For Each ws In ThisWorkbook.Worksheets
-For Each pt In ws.PivotTables
-pt.RefreshTable
-Next pt
-Next ws
-
- ThisWorkbook.Sheets("Preferences").Activate
- ЗаблокироватьВсеЛисты
- 
-' MsgBox "All clear"
- 
-ExitHandler:
- Application.ScreenUpdating = True
- ThisWorkbook.Sheets("Preferences").Activate
- ЗаблокироватьВсеЛисты
- Exit Sub
-
-ErrHandler:
- MsgBox Err.Description
- Resume ExitHandler
-
-End Sub
-
-
-

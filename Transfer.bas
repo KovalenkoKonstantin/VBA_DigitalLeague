@@ -5,9 +5,11 @@ Sub ПравильноВставить()
  Dim ThisWorkbook, importWB As Workbook
  Dim import, this As Worksheet
  Dim MyRange, MyCell As Range
- Dim SaveName, Range1, Range2, Range3, Range4, Range5, Range6, y, Ra1, Ra2, Folder, Path, Slash, j As String
+ Dim SaveName, Range1, Range2, range3, range4, range5, range6, y, Ra1, Ra2, Ra3, Ra4, Ra5, Ra6, Ra7, Ra8, Ra9, Ra10, y1, z1, y2, z2, y3, z3, y4, z4, y5, z5, y6, z6, Folder, Path, Slash As String
  Dim x As Integer 'строки для добавления
  Dim object As Object
+ Dim a As Integer 'количество работающих строк отчётов
+' a = 31 'номер строки до которой будет работать вставка строк
  
 Application.ScreenUpdating = False
 Application.EnableEvents = False
@@ -16,6 +18,8 @@ Application.DisplayStatusBar = False
 Application.DisplayAlerts = False
  
  Set ThisWorkbook = ActiveWorkbook
+ ThisWorkbook.Sheets("Ranges").Activate
+ a = Range("A1").Value 'последняя строка в Ranges
  On Error GoTo ErrHandler
  
  FilesToOpen = Application.GetOpenFilename _
@@ -30,9 +34,16 @@ Application.DisplayAlerts = False
  Set importWB = Workbooks.Open(Filename:=FilesToOpen(1))
  
  'добавление строк
- On Error GoTo ExitHandler
-
-For i = 2 To 8
+ 
+ 'проверка необходимости проведения операций
+ ThisWorkbook.Sheets("Preferences").Activate
+ If Range("L16").Value = False Then
+    GoTo Content
+ End If
+ 
+ 'операции добавления строк
+    On Error Resume Next
+    For i = 2 To a
 
     ThisWorkbook.Sheets("Ranges").Activate
     Range1 = "B" & i
@@ -47,15 +58,15 @@ For i = 2 To 8
         counter = 1
         Do While counter <= flag
         counter = counter + 1
-        LastRow = Cells(Cells.Rows.Count, "A").End(xlUp).Row
-        Rows(LastRow).AutoFill Rows(LastRow).Resize(2), xlFillDefault
+        lastrow = Cells(Cells.Rows.Count, "A").End(xlUp).Row
+        Rows(lastrow).AutoFill Rows(lastrow).Resize(2), xlFillDefault
         On Error Resume Next
-        Rows(LastRow + 1).SpecialCells(xlConstants).ClearContents
+        Rows(lastrow + 1).SpecialCells(xlConstants).ClearContents
         On Error GoTo ExitHandler
-        Rows(LastRow + 1).SpecialCells(xlCellTypeBlanks).Item(1).Activate
-        Rows(LastRow - 1).Select
+        Rows(lastrow + 1).SpecialCells(xlCellTypeBlanks).Item(1).Activate
+        Rows(lastrow - 1).Select
         Selection.Copy
-        Rows(LastRow).Select
+        Rows(lastrow).Select
         Selection.PasteSpecial Paste:=xlPasteFormats, Operation:=xlNone, _
         SkipBlanks:=False, Transpose:=False
         Application.CutCopyMode = False
@@ -65,11 +76,18 @@ For i = 2 To 8
          AllowFormattingRows:=True, AllowInsertingColumns:=False, AllowInsertingRows _
        :=False, AllowSorting:=False, AllowFiltering:=True, AllowUsingPivotTables _
        :=False
-'        Loop
 Next i
   
- 'перенос содержимого в шаблон
- 'содержание
+'содержание
+Content:
+
+ 'проверка необходимости проведения операций
+ ThisWorkbook.Sheets("Preferences").Activate
+ If Range("L17").Value = False Then
+    GoTo 1
+ End If
+
+ 'установка областей
  Set import = importWB.Sheets("Содержание")
  Set this = ThisWorkbook.Sheets("Preferences")
  import.Activate
@@ -160,323 +178,1953 @@ Range("D15:E15").Merge
 
 import.Activate
 ActiveSheet.Protect Password:="tesla"
+
+'счета
+1:
+
+i = 2
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo 2
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        '2 область
+        Ra3 = "Q" & i
+        y2 = Range(Ra3).Text
+        Ra4 = "R" & i
+        z2 = Range(Ra4).Text
+        Ra5 = "W" & i
+        '3 область
+        y3 = Range(Ra5).Text
+        Ra6 = "X" & i
+        z3 = Range(Ra6).Text
+        
+    'перенос данных в шаблон
+        
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+        
+        'область 2
+        this.Activate
+        Range(y2).Copy
+        import.Activate
+        Range(z2).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+            
+        'область 3
+        this.Activate
+        Range(y3).Copy
+        import.Activate
+        Range(z3).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+
+2:
  
- 'счёт 60_01
- Set import = importWB.Sheets("60_01")
- Set this = ThisWorkbook.Sheets("60.01")
+i = 3
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo 4
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        '2 область
+        Ra3 = "Q" & i
+        y2 = Range(Ra3).Text
+        Ra4 = "R" & i
+        z2 = Range(Ra4).Text
+        Ra5 = "W" & i
+        
+    'перенос данных в шаблон
+        
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+        
+        'область 2
+        this.Activate
+        Range(y2).Copy
+        import.Activate
+        Range(z2).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+    
+4:
+
+i = 4
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo 5
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        
+    'перенос данных в шаблон
+        
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+            'удаление нулей
+            Range(z1).Select
+            Set MyRange = Selection
+            For Each MyCell In MyRange
+            If MyCell.Value = 0 Then
+            MyCell.Value = Empty
+            End If
+            Next MyCell
+            'баг шаблона (устранение)
+            import.Activate
+            Range("E23:E32").Select
+            With Selection
+                .Clear
+            End With
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+    
+5:
+
+i = 5
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo 71
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        
+    'перенос данных в шаблон
+        
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+            'удаление нулей
+            Range(z1).Select
+            Set MyRange = Selection
+            For Each MyCell In MyRange
+            If MyCell.Value = 0 Then
+            MyCell.Value = Empty
+            End If
+            Next MyCell
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+
+71:
+
+i = 7
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo 7
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        
+    'перенос данных в шаблон
+        
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+
+7:
+
+i = 6
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo 8
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        
+    'перенос данных в шаблон
+        
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+    
+8:
+
+i = 8
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo 81
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        
+    'перенос данных в шаблон
+        
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+    
+81:
+
+i = 9
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo 9
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        
+    'перенос данных в шаблон
+        
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+    
+9:
+
+i = 10
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo 10
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        
+    'перенос данных в шаблон
+        
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+
+10:
+
+i = 11
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo 101
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        
+    'перенос данных в шаблон
+        
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+
+101:
+
+i = 12
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo 19
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        
+    'перенос данных в шаблон
+        
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+    
+19:
+
+i = 13
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo 77
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        '2 область
+        Ra3 = "Q" & i
+        y2 = Range(Ra3).Text
+        Ra4 = "R" & i
+        z2 = Range(Ra4).Text
+        Ra5 = "W" & i
+        
+    'перенос данных в шаблон
+        
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+        
+        'область 2
+        this.Activate
+        Range(y2).Copy
+        import.Activate
+        Range(z2).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+    
+77:
+
+i = 14
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo 99
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        
+    'перенос данных в шаблон
+        
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+    
+99:
+
+i = 15
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo 4101
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        
+    'перенос данных в шаблон
+        
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+    
+4101:
+
+i = 16
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo НЗПГП
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        
+    'перенос данных в шаблон
+        
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+    
+НЗПГП:
+
+i = 17
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo Financialcontracts
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        '2 область
+        Ra3 = "Q" & i
+        y2 = Range(Ra3).Text
+        Ra4 = "R" & i
+        z2 = Range(Ra4).Text
+        Ra5 = "W" & i
+        
+    'перенос данных в шаблон
+        
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+        
+        'область 2
+        this.Activate
+        Range(y2).Copy
+        import.Activate
+        Range(z2).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+    
+5802:
+
+i = 18
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo 58021
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        '2 область
+        Ra3 = "Q" & i
+        y2 = Range(Ra3).Text
+        Ra4 = "R" & i
+        z2 = Range(Ra4).Text
+        Ra5 = "W" & i
+        '3 область
+        y3 = Range(Ra5).Text
+        Ra6 = "X" & i
+        z3 = Range(Ra6).Text
+        
+    'перенос данных в шаблон
+        
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+        
+        'область 2
+        this.Activate
+        Range(y2).Copy
+        import.Activate
+        Range(z2).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+            
+        'область 3
+        this.Activate
+        Range(y3).Copy
+        import.Activate
+        Range(z3).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+    
+58021:
+
+i = 19
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo 66
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        '2 область
+        Ra3 = "Q" & i
+        y2 = Range(Ra3).Text
+        Ra4 = "R" & i
+        z2 = Range(Ra4).Text
+        Ra5 = "W" & i
+        
+    'перенос данных в шаблон
+        
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+        
+        'область 2
+        this.Activate
+        Range(y2).Copy
+        import.Activate
+        Range(z2).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+    
+66:
+
+'номер строки
+i = 20
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo Financialcontracts
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        '2 область
+        Ra3 = "Q" & i
+        y2 = Range(Ra3).Text
+        Ra4 = "R" & i
+        z2 = Range(Ra4).Text
+        '3 область
+        Ra5 = "W" & i
+        y3 = Range(Ra5).Text
+        Ra6 = "X" & i
+        z3 = Range(Ra6).Text
+        '4 область
+        Ra7 = "AC" & i
+        y4 = Range(Ra7).Text
+        Ra8 = "AD" & i
+        z4 = Range(Ra8).Text
+        '5 область
+        Ra9 = "AI" & i
+        y5 = Range(Ra9).Text
+        Ra10 = "AJ" & i
+        z5 = Range(Ra10).Text
+        
+    'перенос данных в шаблон
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+        
+        'область 2
+        this.Activate
+        Range(y2).Copy
+        import.Activate
+        Range(z2).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+        
+        'область 3
+        this.Activate
+        Range(y3).Copy
+        import.Activate
+        Range(z3).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+        
+        'область 4
+        this.Activate
+        Range(y4).Copy
+        import.Activate
+        Range(z4).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+        
+        'область 5
+        this.Activate
+        Range(y5).Copy
+        import.Activate
+        Range(z5).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+
+Financialcontracts:
+
+'номер строки
+i = 21
+'количество областей
+k = 2
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo 68
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        '2 область
+        Ra3 = "Q" & i
+        y2 = Range(Ra3).Text
+        Ra4 = "R" & i
+        z2 = Range(Ra4).Text
+        
+    'перенос данных в шаблон
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+        
+        'область 2
+        On Error Resume Next
+        this.Activate
+        Range(y2).Copy
+        import.Activate
+        Range(z2).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+68:
+
+'номер строки
+i = 22
+'количество областей
+k = 3
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo 69
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        '2 область
+        Ra3 = "Q" & i
+        y2 = Range(Ra3).Text
+        Ra4 = "R" & i
+        z2 = Range(Ra4).Text
+        '3 область
+        Ra5 = "W" & i
+        y3 = Range(Ra5).Text
+        Ra6 = "X" & i
+        z3 = Range(Ra6).Text
+        
+    'перенос данных в шаблон
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+        
+        'область 2
+        On Error Resume Next
+        this.Activate
+        Range(y2).Copy
+        import.Activate
+        Range(z2).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+        
+        'область 3
+        On Error Resume Next
+        this.Activate
+        Range(y3).Copy
+        import.Activate
+        Range(z3).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+    
+69:
+
+i = 23
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo 73
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        '2 область
+        Ra3 = "Q" & i
+        y2 = Range(Ra3).Text
+        Ra4 = "R" & i
+        z2 = Range(Ra4).Text
+        Ra5 = "W" & i
+        '3 область
+        Ra5 = "W" & i
+        y3 = Range(Ra5).Text
+        Ra6 = "X" & i
+        z3 = Range(Ra6).Text
+        
+    'перенос данных в шаблон
+        
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+        
+        'область 2
+        this.Activate
+        Range(y2).Copy
+        import.Activate
+        Range(z2).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+        
+        'область 3
+        On Error Resume Next
+        this.Activate
+        Range(y3).Copy
+        import.Activate
+        Range(z3).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+    
+73:
+
+i = 24
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo 80
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        
+    'перенос данных в шаблон
+        
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+    
+80:
+
+i = 25
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo 84
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        
+    'перенос данных в шаблон
+        
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+    
+84:
+
+i = 26
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo 96
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        
+    'перенос данных в шаблон
+        
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+    
+96:
+
+'номер строки
+i = 27
+'количество областей
+k = 3
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo 97
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        '2 область
+        Ra3 = "Q" & i
+        y2 = Range(Ra3).Text
+        Ra4 = "R" & i
+        z2 = Range(Ra4).Text
+        '3 область
+        Ra5 = "W" & i
+        y3 = Range(Ra5).Text
+        Ra6 = "X" & i
+        z3 = Range(Ra6).Text
+        
+    'перенос данных в шаблон
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+        
+        'область 2
+        On Error Resume Next
+        this.Activate
+        Range(y2).Copy
+        import.Activate
+        Range(z2).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+        
+        'область 3
+        On Error Resume Next
+        this.Activate
+        Range(y3).Copy
+        import.Activate
+        Range(z3).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+    
+97:
+
+'номер строки
+i = 28
+'количество областей
+k = 3
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo incometax
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        '2 область
+        Ra3 = "Q" & i
+        y2 = Range(Ra3).Text
+        Ra4 = "R" & i
+        z2 = Range(Ra4).Text
+        '3 область
+        Ra5 = "W" & i
+        y3 = Range(Ra5).Text
+        Ra6 = "X" & i
+        z3 = Range(Ra6).Text
+        
+    'перенос данных в шаблон
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+        
+        'область 2
+        On Error Resume Next
+        this.Activate
+        Range(y2).Copy
+        import.Activate
+        Range(z2).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+        
+        'область 3
+        On Error Resume Next
+        this.Activate
+        Range(y3).Copy
+        import.Activate
+        Range(z3).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+    
+incometax:
+
+'номер строки
+i = 29
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo summaryofaccounts
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        '2 область
+        Ra3 = "Q" & i
+        y2 = Range(Ra3).Text
+        Ra4 = "R" & i
+        z2 = Range(Ra4).Text
+        '3 область
+        Ra5 = "W" & i
+        y3 = Range(Ra5).Text
+        Ra6 = "X" & i
+        z3 = Range(Ra6).Text
+        '4 область
+        Ra7 = "AC" & i
+        y4 = Range(Ra7).Text
+        Ra8 = "AD" & i
+        z4 = Range(Ra8).Text
+        '5 область
+        Ra9 = "AI" & i
+        y5 = Range(Ra9).Text
+        Ra10 = "AJ" & i
+        z5 = Range(Ra10).Text
+        
+    'перенос данных в шаблон
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+        
+        'область 2
+        this.Activate
+        Range(y2).Copy
+        import.Activate
+        Range(z2).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+        
+        'область 3
+        this.Activate
+        Range(y3).Copy
+        import.Activate
+        Range(z3).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+        
+        'область 4
+        this.Activate
+        Range(y4).Copy
+        import.Activate
+        Range(z4).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+        
+        'область 5
+        this.Activate
+        Range(y5).Copy
+        import.Activate
+        Range(z5).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+
+summaryofaccounts:
+i = 30
+ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo osv
+     End If
+   'Свод_по_счетам
+ Set import = importWB.Sheets("Свод_по_счетам")
+ Set this = ThisWorkbook.Sheets("Свод_по_счетам")
 
  import.Activate
  ActiveSheet.Unprotect Password:="tesla"
  this.Activate
  ActiveSheet.Unprotect Password:="gfhjkm"
- 'диапазоны счёта 60_01
+ 'диапазоны Свод_по_счетам
  '1
  this.Activate
- Range("A10:B16").Copy
+ Range("C4").Copy
  import.Activate
- Range("C11:D17").Select
+ Range("E9").Select
  Selection.PasteSpecial Paste:=xlPasteValues
-    '2
+      '2
     this.Activate
-    Range("C9:C16").Copy
+    Range("C14").Copy
     import.Activate
-    Range("E10:E17").Select
+    Range("E19").Select
     Selection.PasteSpecial Paste:=xlPasteValues
         '3
         this.Activate
-        Range("D9:D16").Copy
+        Range("C16:C17").Copy
         import.Activate
-        Range("H10:H17").Select
+        Range("E21:E22").Select
         Selection.PasteSpecial Paste:=xlPasteValues
             '4
             this.Activate
-            Range("E9:J16").Copy
+            Range("C20").Copy
             import.Activate
-            Range("K10:P17").Select
+            Range("E25").Select
             Selection.PasteSpecial Paste:=xlPasteValues
-' import.Activate
-' ActiveSheet.Protect Password:="tesla"
+                '5
+                this.Activate
+                Range("C23:C25").Copy
+                import.Activate
+                Range("E28:E30").Select
+                Selection.PasteSpecial Paste:=xlPasteValues
+                    '6
+                    this.Activate
+                    Range("C32").Copy
+                    import.Activate
+                    Range("E37").Select
+                    Selection.PasteSpecial Paste:=xlPasteValues
+                        '7
+                        this.Activate
+                        Range("D22:D24").Copy
+                        import.Activate
+                        Range("F27:F29").Select
+                        Selection.PasteSpecial Paste:=xlPasteValues
+                            '8
+                            this.Activate
+                            Range("D26:D27").Copy
+                            import.Activate
+                            Range("F31:F32").Select
+                            Selection.PasteSpecial Paste:=xlPasteValues
+                                '9
+                                this.Activate
+                                Range("D34").Copy
+                                import.Activate
+                                Range("F39").Select
+                                Selection.PasteSpecial Paste:=xlPasteValues
+                                    '10
+                                    this.Activate
+                                    Range("E14:E15").Copy
+                                    import.Activate
+                                    Range("G19:G20").Select
+                                    Selection.PasteSpecial Paste:=xlPasteValues
+                                        '11
+                                        this.Activate
+                                        Range("E18:E19").Copy
+                                        import.Activate
+                                        Range("G23:G24").Select
+                                        Selection.PasteSpecial Paste:=xlPasteValues
+                                            '12
+                                            this.Activate
+                                            Range("E21").Copy
+                                            import.Activate
+                                            Range("G26").Select
+                                            Selection.PasteSpecial Paste:=xlPasteValues
+                                                '13
+                                                this.Activate
+                                                Range("G6:G11").Copy
+                                                import.Activate
+                                                Range("I11:I16").Select
+                                                Selection.PasteSpecial Paste:=xlPasteValues
+                                                    '14
+                                                    this.Activate
+                                                    Range("I4:J4").Copy
+                                                    import.Activate
+                                                    Range("K9:L9").Select
+                                                    Selection.PasteSpecial Paste:=xlPasteValues
+                                                        '15
+                                                        this.Activate
+                                                        Range("I17:J17").Copy
+                                                        import.Activate
+                                                        Range("K22:L22").Select
+                                                        Selection.PasteSpecial Paste:=xlPasteValues
+                                                            '16
+                                                            this.Activate
+                                                            Range("I22:I29").Copy
+                                                            import.Activate
+                                                            Range("K27:K34").Select
+                                                            Selection.PasteSpecial Paste:=xlPasteValues
+                                                                '17
+                                                                this.Activate
+                                                                Range("J22:J27").Copy
+                                                                import.Activate
+                                                                Range("L27:L32").Select
+                                                                Selection.PasteSpecial Paste:=xlPasteValues
+                                                                    '18
+                                                                    this.Activate
+                                                                    Range("K23:K24").Copy
+                                                                    import.Activate
+                                                                    Range("M28:M29").Select
+                                                                    Selection.PasteSpecial Paste:=xlPasteValues
+                                                                        '19
+                                                                        this.Activate
+                                                                        Range("I32:J32").Copy
+                                                                        import.Activate
+                                                                        Range("K37:L37").Select
+                                                                        Selection.PasteSpecial Paste:=xlPasteValues
+                                                                            '20
+                                                                            this.Activate
+                                                                            Range("L34").Copy
+                                                                            import.Activate
+                                                                            Range("N39").Select
+                                                                            Selection.PasteSpecial Paste:=xlPasteValues
+                                                                                '21
+                                                                                this.Activate
+                                                                                Range("M14:M15").Copy
+                                                                                import.Activate
+                                                                                Range("O19:O20").Select
+                                                                                Selection.PasteSpecial Paste:=xlPasteValues
+                                                                                    '22
+                                                                                    this.Activate
+                                                                                    Range("M18:M19").Copy
+                                                                                    import.Activate
+                                                                                    Range("O23:O24").Select
+                                                                                    Selection.PasteSpecial Paste:=xlPasteValues
+                                                                                        '23
+                                                                                        this.Activate
+                                                                                        Range("M21").Copy
+                                                                                        import.Activate
+                                                                                        Range("O26").Select
+                                                                                        Selection.PasteSpecial Paste:=xlPasteValues
+                                                                                        
+                                                                                            '24
+                                                                                            this.Activate
+                                                                                            Range("O6:O11").Copy
+                                                                                            import.Activate
+                                                                                            Range("Q11:Q16").Select
+                                                                                            Selection.PasteSpecial Paste:=xlPasteValues
+                                                                                                '25
+                                                                                                this.Activate
+                                                                                                Range("Q4:Q32").Copy
+                                                                                                import.Activate
+                                                                                                Range("S9:S37").Select
+                                                                                                Selection.PasteSpecial Paste:=xlPasteValues
+                                                                                                    '26
+                                                                                                    this.Activate
+                                                                                                    Range("Q34").Copy
+                                                                                                    import.Activate
+                                                                                                    Range("S39").Select
+                                                                                                    Selection.PasteSpecial Paste:=xlPasteValues
+
+ import.Activate
+ ActiveSheet.Protect Password:="tesla"
  
- 'счёт 60_02
- Set import = importWB.Sheets("60_02")
- Set this = ThisWorkbook.Sheets("60.02")
+osv:
 
- import.Activate
- ActiveSheet.Unprotect Password:="tesla"
- this.Activate
- ActiveSheet.Unprotect Password:="gfhjkm"
- 'диапазоны счёта 60_02
- '1
- this.Activate
- Range("A14:C21").Copy
- import.Activate
- Range("C15:E22").Select
- Selection.PasteSpecial Paste:=xlPasteValues
-    '2
-    this.Activate
-    Range("D9:D21").Copy
-    import.Activate
-    Range("F10:F22").Select
-    Selection.PasteSpecial Paste:=xlPasteValues
-        '3
-        this.Activate
-        Range("E9:G21").Copy
-        import.Activate
-        Range("I10:K22").Select
-        Selection.PasteSpecial Paste:=xlPasteValues
-' import.Activate
-' ActiveSheet.Protect Password:="tesla"
- 
- 'счёт 62_01
- Set import = importWB.Sheets("62_01")
- Set this = ThisWorkbook.Sheets("62.01")
-
- import.Activate
- ActiveSheet.Unprotect Password:="tesla"
- this.Activate
- ActiveSheet.Unprotect Password:="gfhjkm"
- 'диапазоны счёта 62_01
- '1
- this.Activate
- Range("A8:B15").Copy
- import.Activate
- Range("C11:D18").Select
- Selection.PasteSpecial Paste:=xlPasteValues
-    '2
-    this.Activate
-    Range("C7:C15").Copy
-    import.Activate
-    Range("E10:E18").Select
-    Selection.PasteSpecial Paste:=xlPasteValues
-        '3
-        this.Activate
-        Range("F7:M15").Copy
-        import.Activate
-        Range("H10:O18").Select
-        Selection.PasteSpecial Paste:=xlPasteValues
-' import.Activate
-' ActiveSheet.Protect Password:="tesla"
- 
- 'счёт 62_02
- Set import = importWB.Sheets("62_02")
- Set this = ThisWorkbook.Sheets("62.02")
-
- import.Activate
- ActiveSheet.Unprotect Password:="tesla"
- this.Activate
- ActiveSheet.Unprotect Password:="gfhjkm"
- 'диапазоны счёта 62_02
- '1
- this.Activate
- Range("A8:D12").Copy
- import.Activate
- Range("C11:F15").Select
- Selection.PasteSpecial Paste:=xlPasteValues
-    '2
-    this.Activate
-    Range("F7:G12").Copy
-    import.Activate
-    Range("H10:J15").Select
-    Selection.PasteSpecial Paste:=xlPasteValues
-' import.Activate
-' ActiveSheet.Protect Password:="tesla"
-'
-' 'счёт 60,62,63,76_контр
-' Set import = importWB.Sheets("60,62,63,76_контр")
-' Set this = ThisWorkbook.Sheets("60-76")
-'
-' import.Activate
-' ActiveSheet.Unprotect Password:="tesla"
-' this.Activate
-' ActiveSheet.Unprotect Password:="gfhjkm"
-' 'диапазоны счёта 60,62,63,76_контр
-' '1
-' this.Activate
-' Range("N8:N10").Copy
-' import.Activate
-' Range("P11:P13").Select
-' Selection.PasteSpecial Paste:=xlPasteValues
-'    '2
-'    this.Activate
-'    Range("T8:T10").Copy
-'    import.Activate
-'    Range("V11:V13").Select
-'    Selection.PasteSpecial Paste:=xlPasteValues
-'        '3
-'        this.Activate
-'        Range("AA11").Copy
-'        import.Activate
-'        Range("AC14").Select
-'        Selection.PasteSpecial Paste:=xlPasteValues
-'            '4
-'            this.Activate
-'            Range("BT12:CG480").Copy
-'            import.Activate
-'            Range("C15:P483").Select
-'            Selection.PasteSpecial Paste:=xlPasteValues
-'                '5
-'                this.Activate
-'                Range("CM12:CM480").Copy
-'                import.Activate
-'                Range("V15:V483").Select
-'                Selection.PasteSpecial Paste:=xlPasteValues
-'                    '6
-'                    this.Activate
-'                    Range("CT12:CT480").Copy
-'                    import.Activate
-'                    Range("AC15:AC483").Select
-'                    Selection.PasteSpecial Paste:=xlPasteValues
-'                        '7
-'                        this.Activate
-'                        Range("DA12:DB480").Copy
-'                        import.Activate
-'                        Range("AJ15:AK483").Select
-'                        Selection.PasteSpecial Paste:=xlPasteValues
-' import.Activate
-' ActiveSheet.Protect Password:="tesla"
-'
-' 'счёт 68
-' Set import = importWB.Sheets("68")
-' Set this = ThisWorkbook.Sheets("68")
-'
-' import.Activate
-' ActiveSheet.Unprotect Password:="tesla"
-' this.Activate
-' ActiveSheet.Unprotect Password:="gfhjkm"
-' 'диапазоны счёта 68
-' '1
-' this.Activate
-' Range("A6:H20").Copy
-' import.Activate
-' Range("C10:J24").Select
-' Selection.PasteSpecial Paste:=xlPasteValues
-'    '2
-'    this.Activate
-'    Range("K6:K20").Copy
-'    import.Activate
-'    Range("M10:M24").Select
-'    Selection.PasteSpecial Paste:=xlPasteValues
-'        '3
-'        this.Activate
-'        Range("N6:W20").Copy
-'        import.Activate
-'        Range("P10:Y24").Select
-'        Selection.PasteSpecial Paste:=xlPasteValues
-' import.Activate
-' ActiveSheet.Protect Password:="tesla"
-'
-' 'счёт 68
-' Set import = importWB.Sheets("68")
-' Set this = ThisWorkbook.Sheets("68")
-'
-' import.Activate
-' ActiveSheet.Unprotect Password:="tesla"
-' this.Activate
-' ActiveSheet.Unprotect Password:="gfhjkm"
-' 'диапазоны счёта 68
-' '1
-' this.Activate
-' Range("A6:H20").Copy
-' import.Activate
-' Range("C10:J24").Select
-' Selection.PasteSpecial Paste:=xlPasteValues
-'    '2
-'    this.Activate
-'    Range("K6:K20").Copy
-'    import.Activate
-'    Range("M10:M24").Select
-'    Selection.PasteSpecial Paste:=xlPasteValues
-'        '3
-'        this.Activate
-'        Range("N6:W20").Copy
-'        import.Activate
-'        Range("P10:Y24").Select
-'        Selection.PasteSpecial Paste:=xlPasteValues
-' import.Activate
-' ActiveSheet.Protect Password:="tesla"
-'
-' 'счёт 76
-' Set import = importWB.Sheets("76")
-' Set this = ThisWorkbook.Sheets("76")
-'
-' import.Activate
-' ActiveSheet.Unprotect Password:="tesla"
-' this.Activate
-' ActiveSheet.Unprotect Password:="gfhjkm"
-' 'диапазоны счёта 76
-' '1
-' this.Activate
-' Range("O26").Copy
-' import.Activate
-' Range("Q28").Select
-' Selection.PasteSpecial Paste:=xlPasteValues
-'    '2
-'    this.Activate
-'    Range("A34:G44").Copy
-'    import.Activate
-'    Range("C45:I55").Select
-'    Selection.PasteSpecial Paste:=xlPasteValues
-'    Range("C45:I55").Select
-'    Set MyRange = Selection
-'    For Each MyCell In MyRange
-'    If MyCell.Value = 0 Then
-'    MyCell.Value = Empty
-'    End If
-'    Next MyCell
-'        '3
-'        this.Activate
-'        Range("J34:P44").Copy
-'        import.Activate
-'        Range("L45:R55").Select
-'        Selection.PasteSpecial Paste:=xlPasteValues
-'        Range("L45:R55").Select
-'        Set MyRange = Selection
-'        For Each MyCell In MyRange
-'        If MyCell.Value = 0 Then
-'        MyCell.Value = Empty
-'        End If
-'        Next MyCell
-'            '4
-'            this.Activate
-'            Range("S34:S44").Copy
-'            import.Activate
-'            Range("U45:U55").Select
-'            Selection.PasteSpecial Paste:=xlPasteValues
-'            Range("U45:U55").Select
-'            Set MyRange = Selection
-'            For Each MyCell In MyRange
-'            If MyCell.Value = 0 Then
-'            MyCell.Value = Empty
-'            End If
-'            Next MyCell
-' import.Activate
-' ActiveSheet.Protect Password:="tesla"
-
-'вставка видимых проверок
-ThisWorkbook.Sheets("Preferences").Activate
-Range("L2").Copy
-
-On Error GoTo Saver
-
-For i = 2 To 8
+i = 31
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo 5804
+     End If
+     
+    'определение книг
     ThisWorkbook.Sheets("Ranges").Activate
-    Range1 = "E" & i 'диапазоны проверок
-    Range2 = "A" & i 'диапазоны отчётов
-    j = Range(Range1).Text
-    y = Range(Range2).Text
-    importWB.Sheets(y).Activate
-    Range(j).Select
-    Set MyRange = Selection
-        For Each MyCell In MyRange
-            If MyCell.Value = True Or MyCell.Value = False Then
-                MyCell.Select
-                Selection.PasteSpecial Paste:=xlPasteFormats
-            End If
-        Next MyCell
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        
+    'перенос данных в шаблон
+        
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+    
+5804:
+
+'номер строки
+i = 32
+'количество областей
+k = 3
+'проверка необходимости проведения операций
+     ThisWorkbook.Sheets("Preferences").Activate
+     If Range("S" & i + 1).Value = False Then
+        GoTo saver
+     End If
+     
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'снятие блокировки
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    ActiveWindow.Zoom = 100
+    this.Activate
+    ActiveSheet.Unprotect Password:="gfhjkm"
+   
+   'установка диапазонов
+        ThisWorkbook.Sheets("Ranges").Activate
+        '1 область
+        Ra1 = "K" & i
+        y1 = Range(Ra1).Text
+        Ra2 = "L" & i
+        z1 = Range(Ra2).Text
+        '2 область
+        Ra3 = "Q" & i
+        y2 = Range(Ra3).Text
+        Ra4 = "R" & i
+        z2 = Range(Ra4).Text
+        '3 область
+        Ra5 = "W" & i
+        y3 = Range(Ra5).Text
+        Ra6 = "X" & i
+        z3 = Range(Ra6).Text
+        '4 область
+        Ra7 = "AC" & i
+        y4 = Range(Ra7).Text
+        Ra8 = "AD" & i
+        z4 = Range(Ra8).Text
+        
+    'перенос данных в шаблон
+        'область 1
+        On Error Resume Next
+        this.Activate
+        Range(y1).Copy
+        import.Activate
+        Range(z1).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+        
+        'область 2
+        On Error Resume Next
+        this.Activate
+        Range(y2).Copy
+        import.Activate
+        Range(z2).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+        
+        'область 3
+        On Error Resume Next
+        this.Activate
+        Range(y3).Copy
+        import.Activate
+        Range(z3).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+        
+        'область 4
+        On Error Resume Next
+        this.Activate
+        Range(y4).Copy
+        import.Activate
+        Range(z4).Select
+        Selection.PasteSpecial Paste:=xlPasteValues
+    
+    'блокировка листа шаблона
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
+ 
+saver:
+
+'формирование проверок
+For i = 2 To a
+    'определение книг
+    ThisWorkbook.Sheets("Ranges").Activate
+    Range1 = "A" & i
+    y = Range(Range1).Text
+    Set import = importWB.Sheets(y)
+    Set this = ThisWorkbook.Sheets(y)
+    
+    'внесение формул
+    import.Activate
+    ActiveSheet.Unprotect Password:="tesla"
+    this.Activate
+    Range("A2").Copy
+    import.Activate
+    Range("A2").Select
+    Selection.PasteSpecial Paste:=xlPasteFormulas
+    import.Activate
+    Range("A2").Copy
+    ThisWorkbook.Sheets("Preferences").Activate
+    Range("Q" & i + 1).Select
+    Selection.PasteSpecial Paste:=xlPasteValues
+    import.Activate
+    Range("A2").Select
+    With Selection
+        .Clear
+    End With
+    import.Activate
+    ActiveSheet.Protect Password:="tesla"
 Next i
  
-'сохранение с добавлением файла в уже существующую папку/созданием папки при сотсутствии
-Saver:
+'сохранение c добавлением в существующую папку
     ThisWorkbook.Sheets("Preferences").Activate
     SaveName = ActiveSheet.Range("AC1").Text
     Folder = ActiveSheet.Range("AA1").Text
@@ -485,61 +2133,17 @@ Saver:
     Path = ActiveWorkbook.Path
 
     If object.FolderExists(Path & "\" & Folder) Then
-        importWB.Activate
-        importWB.SaveAs Filename:=Path & "\" & Folder & "\" & _
-        SaveName & ".xlsm"
+        Resume Next
     Else
         object.CreateFolder (Path & "\" & Folder)
-            importWB.Activate
-            importWB.SaveAs Filename:=Path & "\" & Folder & "\" & _
-            SaveName & ".xlsm"
     End If
+     
+    importWB.Activate
+    importWB.SaveAs Filename:=Path & "\" & Folder & "\" & _
+    SaveName & ".xlsm"
+
     importWB.Save
-    
- 'добавление общей проверочной формулы
-    importWB.Sheets("60_01").Activate
-    Range("U6").Select
-    Range("U6").FormulaLocal = "=И(U8:U500;Y8:Y500;AC8:AC500)"
-        importWB.Sheets("60_02").Activate
-        Range("P11").Select
-        Range("P11").FormulaLocal = "=И(P13:P500;T13:T500;V13:V500)"
-            importWB.Sheets("62_01").Activate
-            Range("T6").Select
-            Range("T6").FormulaLocal = "=И(T9:T500;X9:X500;Z9:Z500)"
-                importWB.Sheets("62_02").Activate
-                Range("T6").Select
-                Range("O6").FormulaLocal = "=И(O9:Q500;U9:U500)"
- 'перенос проверочной формулы в Preferences
-    importWB.Sheets("60_01").Activate
-    Range("U6").Copy
-    ThisWorkbook.Sheets("Preferences").Activate
-    Range("Q3").Select
-    Selection.PasteSpecial Paste:=xlPasteValues
-        importWB.Sheets("60_02").Activate
-        Range("P11").Copy
-        ThisWorkbook.Sheets("Preferences").Activate
-        Range("Q4").Select
-        Selection.PasteSpecial Paste:=xlPasteValues
-            importWB.Sheets("62_01").Activate
-            Range("T6").Copy
-            ThisWorkbook.Sheets("Preferences").Activate
-            Range("Q5").Select
-            Selection.PasteSpecial Paste:=xlPasteValues
-                importWB.Sheets("62_02").Activate
-                Range("O6").Copy
-                ThisWorkbook.Sheets("Preferences").Activate
-                Range("Q6").Select
-                Selection.PasteSpecial Paste:=xlPasteValues
-    
-'    importWB.Close
-' ThisWorkbook.Sheets("Preferences").Activate
-'вставка форматов проверочных формул для ФСД
- ThisWorkbook.Sheets("Preferences").Activate
- Range("L2").Copy
- Range("Q3:Q300").Select
- With Selection
-        .PasteSpecial Paste:=xlPasteFormats
- End With
+    importWB.Close
 
 ExitHandler:
     Application.ScreenUpdating = True
@@ -548,6 +2152,7 @@ ExitHandler:
     Application.DisplayStatusBar = True
     Application.DisplayAlerts = True
  ThisWorkbook.Sheets("Preferences").Activate
+ ActiveWindow.Zoom = 100
  Exit Sub
  
 ErrHandler:

@@ -1,6 +1,6 @@
 Attribute VB_Name = "Main"
-Sub нахлабуч()
-
+Sub Data_insertion()
+ 
  Dim FilesToOpen
  Dim ThisWorkbook, importWB As Workbook
  Dim ws, this As Worksheet
@@ -8,7 +8,7 @@ Sub нахлабуч()
  Dim MyRange, MyCell As Range
  Dim key As String
  Dim x As Integer
- x = 9 'количество листов для вставки
+ x = 24 'количество листов для вставки
  
  Set ThisWorkbook = ActiveWorkbook
  On Error GoTo ExitHandler
@@ -37,122 +37,38 @@ Application.DisplayAlerts = False
         .Clear
  End With
  Next i
+ 
  ThisWorkbook.Sheets("Preferences").Activate
- Range("Q3:Q300").Select
+ Range("Q3:Q33").Select
  With Selection
         .Clear
  End With
-    'тяжёлые листы
-    ThisWorkbook.Sheets(9).Activate
-    Range("A1:N12000").Select
-    With Selection
-           .Clear
-    End With
-    'очистка ИНН
-    ThisWorkbook.Sheets("ИНН").Activate
-    Range("A1:C400000").Select
-    With Selection
-           .Clear
-    End With
+ Range("L2").Copy
+ Range("Q3:Q33").Select
+ With Selection
+        .PasteSpecial Paste:=xlPasteFormats
+ End With
 
 'вставка листов
 Set importWB = Workbooks.Open(Filename:=FilesToOpen(1))
-For i = 1 To x
-On Error Resume Next
- importWB.Sheets(i).Activate
- lLastRow = Cells(Rows.Count, "K").End(xlUp).Row
- j = lLastRow
- 
- importWB.Sheets(i).Activate
- Range("A1:N" & j).Select
- Range("A1:N" & j).Copy
- ThisWorkbook.Sheets(i).Activate
- Range("A1:N" & j).Select
- With Selection
-        .PasteSpecial Paste:=xlPasteAll
-        .UnMerge
-        .Font.Name = "Times New Roman"
-        .WrapText = False
-        .MergeCells = False
- End With
- Next i
- 
-    'тяжёлые листы
-    a = 9
-    For i = 6 To a
-    If i = a Then
-    key = "H"
-    Else
-    key = "I"
-    End If
-'    i = 5
-'    key = "I"
-    importWB.Sheets(i).Activate
-    lLastRow = Cells(Rows.Count, key).End(xlUp).Row
-    j = lLastRow
-    importWB.Sheets(i).Activate
-    Range("A1:L" & j).Select
-    Range("A1:L" & j).Copy
-    ThisWorkbook.Sheets(i).Activate
-    Range("A1:L" & j).Select
-    With Selection
+    For i = 1 To x
+    On Error Resume Next
+     importWB.Sheets(i).Activate
+     lLastRow = Cells(Rows.Count, "K").End(xlUp).Row
+     j = lLastRow
+     
+     importWB.Sheets(i).Activate
+     Range("A1:N" & j).Select
+     Range("A1:N" & j).Copy
+     ThisWorkbook.Sheets(i).Activate
+     Range("A1:N" & j).Select
+     With Selection
             .PasteSpecial Paste:=xlPasteAll
             .UnMerge
             .Font.Name = "Times New Roman"
             .WrapText = False
             .MergeCells = False
-    End With
-'         i = 6
-'         key = "I"
-'        importWB.Sheets(i).Activate
-'        lLastRow = Cells(Rows.Count, key).End(xlUp).Row
-'        j = lLastRow
-'         importWB.Sheets(i).Activate
-'         Range("A1:L" & j).Select
-'         Range("A1:L" & j).Copy
-'         ThisWorkbook.Sheets(i).Activate
-'         Range("A1:L" & j).Select
-'         With Selection
-'                .PasteSpecial Paste:=xlPasteAll
-'                .UnMerge
-'                .Font.Name = "Times New Roman"
-'                .WrapText = False
-'                .MergeCells = False
-'         End With
-'             i = 7
-'             key = "I"
-'            importWB.Sheets(i).Activate
-'            lLastRow = Cells(Rows.Count, key).End(xlUp).Row
-'            j = lLastRow
-'             importWB.Sheets(i).Activate
-'             Range("A1:L" & j).Select
-'             Range("A1:L" & j).Copy
-'             ThisWorkbook.Sheets(i).Activate
-'             Range("A1:L" & j).Select
-'             With Selection
-'                    .PasteSpecial Paste:=xlPasteAll
-'                    .UnMerge
-'                    .Font.Name = "Times New Roman"
-'                    .WrapText = False
-'                    .MergeCells = False
-'             End With
-'                 i = 8
-'                 key = "H"
-'                importWB.Sheets(i).Activate
-'                lLastRow = Cells(Rows.Count, key).End(xlUp).Row
-'                j = lLastRow
-'                 importWB.Sheets(i).Activate
-'                 Range("A1:L" & j).Select
-'                 Range("A1:L" & j).Copy
-'                 ThisWorkbook.Sheets(i).Activate
-'                 Range("A1:L" & j).Select
-'                 With Selection
-'                        .PasteSpecial Paste:=xlPasteAll
-'                        .UnMerge
-'                        .Font.Name = "Times New Roman"
-'                        .WrapText = False
-'                        .MergeCells = False
-'                 End With
+     End With
     Next i
 
 'обновление сводных таблиц
@@ -187,6 +103,7 @@ ErrHandler:
  Resume ExitHandler
 
 End Sub
+
 
 
 

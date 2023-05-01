@@ -1,5 +1,5 @@
 Attribute VB_Name = "Lord"
-Sub Тык()
+Sub Г’Г»ГЄ()
  
  Dim ws As Worksheet
  Dim pt As PivotTable
@@ -12,17 +12,17 @@ Sub Тык()
  
  Application.ScreenUpdating = False
  
- FilesToOpen = Application.GetOpenFilename(MultiSelect:=True, Title:="Файл для копирования")
+ FilesToOpen = Application.GetOpenFilename(MultiSelect:=True, Title:="Г”Г Г©Г« Г¤Г«Гї ГЄГ®ГЇГЁГ°Г®ГўГ Г­ГЁГї")
  
  If TypeName(FilesToOpen) = "Boolean" Then
-' MsgBox "Файл не выбран!"
+' MsgBox "Г”Г Г©Г« Г­ГҐ ГўГ»ГЎГ°Г Г­!"
  GoTo ExitHandler
  End If
    
  Set importWB = Workbooks.Open(Filename:=FilesToOpen(1))
  
  ThisWorkbook.Activate
- СнятьЗащитуВсехЛистов
+ Г‘Г­ГїГІГјГ‡Г Г№ГЁГІГіГ‚Г±ГҐГµГ‹ГЁГ±ГІГ®Гў
    
  importWB.Sheets(1).Activate
  Range("A1:BB300").Copy
@@ -39,7 +39,7 @@ Sub Тык()
  
  importWB.Sheets(2).Activate
  Range("A1:BB300").Copy
- ThisWorkbook.Sheets("58н").Activate
+ ThisWorkbook.Sheets("58Г­").Activate
  Range("A1:BB300").Select
  With Selection
         .PasteSpecial Paste:=xlPasteAll
@@ -51,7 +51,7 @@ Sub Тык()
  
  importWB.Sheets(3).Activate
  Range("A1:BB300").Copy
- ThisWorkbook.Sheets("58контр").Activate
+ ThisWorkbook.Sheets("58ГЄГ®Г­ГІГ°").Activate
  Range("A1:BB300").Select
  With Selection
         .PasteSpecial Paste:=xlPasteAll
@@ -76,7 +76,7 @@ Sub Тык()
  
  importWB.Sheets(5).Activate
  Range("A1:BB300").Copy
- ThisWorkbook.Sheets("60н").Activate
+ ThisWorkbook.Sheets("60Г­").Activate
  Range("A1:BB300").Select
  With Selection
         .PasteSpecial Paste:=xlPasteAll
@@ -88,7 +88,7 @@ Sub Тык()
  
  importWB.Sheets(6).Activate
  Range("A1:BB300").Copy
- ThisWorkbook.Sheets("60контр").Activate
+ ThisWorkbook.Sheets("60ГЄГ®Г­ГІГ°").Activate
  Range("A1:BB300").Select
  With Selection
         .PasteSpecial Paste:=xlPasteAll
@@ -112,7 +112,7 @@ Sub Тык()
 
  importWB.Sheets(8).Activate
  Range("A1:BB300").Copy
- ThisWorkbook.Sheets("62н").Activate
+ ThisWorkbook.Sheets("62Г­").Activate
  Range("A1:BB300").Select
  With Selection
         .PasteSpecial Paste:=xlPasteAll
@@ -124,7 +124,7 @@ Sub Тык()
 
  importWB.Sheets(9).Activate
  Range("A1:BB300").Copy
- ThisWorkbook.Sheets("62контр").Activate
+ ThisWorkbook.Sheets("62ГЄГ®Г­ГІГ°").Activate
  Range("A1:BB300").Select
  With Selection
         .PasteSpecial Paste:=xlPasteAll
@@ -148,7 +148,7 @@ Sub Тык()
 
  importWB.Sheets(11).Activate
  Range("A1:BB300").Copy
- ThisWorkbook.Sheets("66н").Activate
+ ThisWorkbook.Sheets("66Г­").Activate
  Range("A1:BB300").Select
  With Selection
         .PasteSpecial Paste:=xlPasteAll
@@ -160,7 +160,7 @@ Sub Тык()
 
  importWB.Sheets(12).Activate
  Range("A1:BB300").Copy
- ThisWorkbook.Sheets("66контр").Activate
+ ThisWorkbook.Sheets("66ГЄГ®Г­ГІГ°").Activate
  Range("A1:BB300").Select
  With Selection
         .PasteSpecial Paste:=xlPasteAll
@@ -184,7 +184,7 @@ Sub Тык()
 
  importWB.Sheets(14).Activate
  Range("A1:BB300").Copy
- ThisWorkbook.Sheets("76н").Activate
+ ThisWorkbook.Sheets("76Г­").Activate
  Range("A1:BB300").Select
  With Selection
         .PasteSpecial Paste:=xlPasteAll
@@ -196,7 +196,7 @@ Sub Тык()
 
  importWB.Sheets(15).Activate
  Range("A1:BB300").Copy
- ThisWorkbook.Sheets("76контр").Activate
+ ThisWorkbook.Sheets("76ГЄГ®Г­ГІГ°").Activate
  Range("A1:BB300").Select
  With Selection
         .PasteSpecial Paste:=xlPasteAll
@@ -254,27 +254,28 @@ Next ws
 If Range("W3") = True Then
 Dim Style, Title
 Style = vbExclamation = 48
-Title = "Ура!"
-'MsgBox "Всё встало на свои места", Style, Title
+Title = "Г“Г°Г !"
+'MsgBox "Г‚Г±Вё ГўГ±ГІГ Г«Г® Г­Г  Г±ГўГ®ГЁ Г¬ГҐГ±ГІГ ", Style, Title
 Else
 Dim Style1, Title1
 Style1 = vbCritical = 16
-Title1 = "Блин!"
+Title1 = "ГЃГ«ГЁГ­!"
 'MsgBox "...", Style1, Title1
 End If
 
 ExitHandler:
  Application.ScreenUpdating = True
 ' ThisWorkbook.Activate
-' ЗаблокироватьВсеЛисты
+' Г‡Г ГЎГ«Г®ГЄГЁГ°Г®ГўГ ГІГјГ‚Г±ГҐГ‹ГЁГ±ГІГ»
  ThisWorkbook.Sheets("Merge").Activate
  Exit Sub
  
-' ЗаблокироватьВсеЛисты
+' Г‡Г ГЎГ«Г®ГЄГЁГ°Г®ГўГ ГІГјГ‚Г±ГҐГ‹ГЁГ±ГІГ»
  
 ErrHandler:
  MsgBox Err.Description
  Resume ExitHandler
 
 End Sub
+
 
